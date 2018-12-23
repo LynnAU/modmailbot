@@ -87,6 +87,12 @@ const defaultConfig = {
   "knex": null,
 
   "logDir": path.join(__dirname, '..', 'logs'),
+
+  dbType: 'pg',
+  dbHost: 'localhost',
+  dbUser: 'postgres',
+  dbPass: 'postgres',
+  dbName: 'modmail',
 };
 
 const required = ['token', 'mailGuildId', 'mainGuildId', 'logChannelId'];
@@ -104,9 +110,16 @@ for (const [prop, value] of Object.entries(userConfig)) {
 // Default knex config
 if (! finalConfig['knex']) {
   finalConfig['knex'] = {
-    client: 'sqlite',
-      connection: {
-      filename: path.join(finalConfig.dbDir, 'data.sqlite')
+    // client: 'sqlite',
+    //   connection: {
+    //   filename: path.join(finalConfig.dbDir, 'data.sqlite')
+    // },
+    client: finalConfig.dbType,
+    connection: {
+      host: finalConfig.dbHost,
+      user: finalConfig.dbUser,
+      password: finalConfig.dbPass,
+      database: finalConfig.dbName
     },
     useNullAsDefault: true
   };
