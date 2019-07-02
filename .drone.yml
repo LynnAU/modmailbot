@@ -1,0 +1,35 @@
+kind: pipeline
+name: automatic image update
+
+steps:
+  # - name: docker
+  #   image: plugins/docker
+  #   settings:
+  #     repo: lynnier/dragory-modmail
+  #     tags: test-pipeline
+  #     dry_run: true
+  #     username:
+  #       from_secret: dockerhub_user
+  #     password:
+  #       from_secret: dockerhub_pass
+
+  - name: docker build
+    image: docker
+    volumes:
+      - name: docker
+        path: /var/run/docker.sock
+    environment:
+      USER:
+        from_secret: dockerhub_user
+      PASS:
+        from_secret: dockerhub_pass
+    commands:
+      - export TAG_TIME=$(date -u +%d.%m.%y)
+      - docker build -t docker.io/$USER/dragory-modmail:$TAG_TIME .
+      - docker login -u $USER -p $PASS
+      - docker push docker.io/$USER/dragory-modmail:$TAG_TIME
+
+volumes:
+  - name: docker
+    host:
+      path: /var/run/docker.sock
