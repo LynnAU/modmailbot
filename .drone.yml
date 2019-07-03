@@ -5,16 +5,17 @@ steps:
   - name: build-docker
     image: docker
     volumes:
-      - name: docker
+      - name: docker-vol
         path: /var/run/docker.sock
     commands:
-      - export TAG_TIME=$(date -u +%d.%m.%y)
+      # - export TAG_TIME=$(date -u +%d.%m.%y)
+      - printenv
       - docker build -t docker.io/lynnier/dragory-modmail:$TAG_TIME .
 
   - name: push-docker
     image: docker
     volumes:
-      - name: docker
+      - name: docker-vol
         path: /var/run/docker.sock
     environment:
       USER:
@@ -27,6 +28,6 @@ steps:
       - docker push docker.io/lynnier/dragory-modmail:$TAG_TIME
 
 volumes:
-  - name: docker
+  - name: docker-vol
     host:
       path: /var/run/docker.sock
