@@ -1,6 +1,10 @@
 kind: pipeline
 name: automatic-image-update
 
+trigger:
+  branch:
+    - master
+
 steps:
   - name: tag-preparation
     image: alpine
